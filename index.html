@@ -51,6 +51,7 @@
       (function () {
         var root = document.documentElement;
         var toggle = document.getElementById("theme-toggle");
+        var media = window.matchMedia("(prefers-color-scheme: dark)");
         var stored = localStorage.getItem("theme");
 
         function apply(theme) {
@@ -65,7 +66,13 @@
           }
         }
 
-        apply(stored === "dark" ? "dark" : "light");
+        apply(stored ? stored : media.matches ? "dark" : "light");
+
+        media.addEventListener("change", function (event) {
+          if (!localStorage.getItem("theme")) {
+            apply(event.matches ? "dark" : "light");
+          }
+        });
 
         toggle.addEventListener("click", function () {
           var isDark = root.getAttribute("data-theme") === "dark";
