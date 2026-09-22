@@ -13,6 +13,7 @@
         <a href="#features">Features</a>
         <a href="#pricing">Pricing</a>
         <a class="button" href="#signup">Get started</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">🌙</button>
       </nav>
     </header>
     <main>
@@ -46,5 +47,33 @@
     <footer id="signup">
       <p>© Lumen. Made with care.</p>
     </footer>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var toggle = document.getElementById("theme-toggle");
+        var stored = localStorage.getItem("theme");
+
+        function apply(theme) {
+          if (theme === "dark") {
+            root.setAttribute("data-theme", "dark");
+            toggle.textContent = "☀️";
+            toggle.setAttribute("aria-pressed", "true");
+          } else {
+            root.removeAttribute("data-theme");
+            toggle.textContent = "🌙";
+            toggle.setAttribute("aria-pressed", "false");
+          }
+        }
+
+        apply(stored === "dark" ? "dark" : "light");
+
+        toggle.addEventListener("click", function () {
+          var isDark = root.getAttribute("data-theme") === "dark";
+          var next = isDark ? "light" : "dark";
+          localStorage.setItem("theme", next);
+          apply(next);
+        });
+      })();
+    </script>
   </body>
 </html>
