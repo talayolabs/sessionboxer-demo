@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lumen — notes that think with you</title>
     <link rel="stylesheet" href="styles.css" />
+    <script>
+      (function () {
+        var saved = localStorage.getItem("theme");
+        var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (saved === "dark" || (!saved && prefersDark)) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
+      })();
+    </script>
   </head>
   <body>
     <header class="top">
@@ -13,6 +22,7 @@
         <a href="#features">Features</a>
         <a href="#pricing">Pricing</a>
         <a class="button" href="#signup">Get started</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle dark mode">🌙</button>
       </nav>
     </header>
     <main>
@@ -46,5 +56,40 @@
     <footer id="signup">
       <p>© Lumen. Made with care.</p>
     </footer>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        var btn = document.getElementById("theme-toggle");
+        var media = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+
+        function sync() {
+          var dark = root.getAttribute("data-theme") === "dark";
+          btn.textContent = dark ? "☀️" : "🌙";
+        }
+
+        btn.addEventListener("click", function () {
+          var dark = root.getAttribute("data-theme") === "dark";
+          if (dark) {
+            root.removeAttribute("data-theme");
+            localStorage.setItem("theme", "light");
+          } else {
+            root.setAttribute("data-theme", "dark");
+            localStorage.setItem("theme", "dark");
+          }
+          sync();
+        });
+
+        if (media) {
+          media.addEventListener("change", function (e) {
+            if (localStorage.getItem("theme")) return;
+            if (e.matches) root.setAttribute("data-theme", "dark");
+            else root.removeAttribute("data-theme");
+            sync();
+          });
+        }
+
+        sync();
+      })();
+    </script>
   </body>
 </html>
