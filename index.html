@@ -8,7 +8,10 @@
     <script>
       (function () {
         var saved = localStorage.getItem("theme");
-        if (saved === "dark") document.documentElement.setAttribute("data-theme", "dark");
+        var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (saved === "dark" || (!saved && prefersDark)) {
+          document.documentElement.setAttribute("data-theme", "dark");
+        }
       })();
     </script>
   </head>
@@ -57,10 +60,13 @@
       (function () {
         var root = document.documentElement;
         var btn = document.getElementById("theme-toggle");
+        var media = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+
         function sync() {
           var dark = root.getAttribute("data-theme") === "dark";
           btn.textContent = dark ? "☀️" : "🌙";
         }
+
         btn.addEventListener("click", function () {
           var dark = root.getAttribute("data-theme") === "dark";
           if (dark) {
@@ -72,6 +78,16 @@
           }
           sync();
         });
+
+        if (media) {
+          media.addEventListener("change", function (e) {
+            if (localStorage.getItem("theme")) return;
+            if (e.matches) root.setAttribute("data-theme", "dark");
+            else root.removeAttribute("data-theme");
+            sync();
+          });
+        }
+
         sync();
       })();
     </script>
