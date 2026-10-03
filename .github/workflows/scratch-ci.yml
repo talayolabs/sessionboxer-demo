@@ -1,0 +1,11 @@
+name: scratch-ci
+on: [pull_request]
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "FAIL - 2 tests failed (test_hello, test_shout)"; exit 1
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ok
